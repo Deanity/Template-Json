@@ -3,258 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON Config</title>
+  <title>JSON Config Generator</title>
   <link rel="shortcut icon" href="https://cdn.discordapp.com/avatars/1331944037908742205/2c43a3ba3956e06229bf73cb0a04b632.png?size=256" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    body {
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      padding: 20px;
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-      box-sizing: border-box;
-    }
-    pre {
-      background: #f4f4f4;
-      padding: 20px;
-      border-radius: 8px;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      max-height: 80vh;
-    }
-    .form-container, .preview-container {
-      flex: 1;
-      min-width: 0;
-    }
-    input, textarea {
-      width: 90%;
-      margin-bottom: 10px;
-      padding: 8px;
-    }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 10px;
-    }
-    .channel-group {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-      position: relative;
-      border-radius: 8px;
-    }
-    .remove-channel {
-      position: absolute;
-      right: 10px;
-      top: 10px;
-      background: #f44336;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 5px 8px;
-      cursor: pointer;
-    }
-    .remove-channel i {
-      pointer-events: none;
-    }
-    .add-btn, .generate-btn, .copy-btn {
-      margin-top: 10px;
-      padding: 10px 14px;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    .add-btn {
-      background: #4CAF50;
-    }
-    .generate-btn {
-      background: #2196F3;
-    }
-    .copy-btn {
-      background: #9C27B0;
-      margin-left: 10px;
-    }
-    pre {
-      background: #f4f4f4;
-      padding: 20px;
-      border-radius: 8px;
-      overflow-x: auto;
-    }
-    .button-row {
-      display: flex;
-      align-items: center;
-      margin-top: 10px;
-    }
-    
-    /* Add responsive styles */
-    @media screen and (max-width: 768px) {
-      body {
-        flex-direction: column;
-        padding: 10px;
-      }
-      
-      .form-container, .preview-container {
-        width: 100%;
-      }
-      
-      input, textarea {
-        width: 100%;
-        box-sizing: border-box;
-      }
-      
-      .channel-group {
-        margin: 10px 0;
-      }
-      
-      pre {
-        max-height: 40vh;
-        font-size: 14px;
-      }
-      
-      h1 {
-        font-size: 24px;
-      }
-      
-      h3 {
-        font-size: 18px;
-      }
-      
-      .button-row {
-        justify-content: space-between;
-      }
-      
-      .add-btn, .generate-btn, .copy-btn {
-        padding: 8px 12px;
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   
-  <div class="form-container">
-    <h1>Boolua Json Generator</h1>
-    <label>Token</label>
-    <input type="text" id="token" placeholder="Enter token">
+  <div class="container fade-in-up">
+    <!-- Left form container -->
+    <div class="card form-container slide-in-left">
+      <div class="header">
+        <h1><i class="fas fa-sliders-h gradient-text"></i> Boolua Config</h1>
+        <p>Generate your JSON configurations instantly</p>
+      </div>
 
-    <h3>Channels</h3>
-    <div id="channelsContainer"></div>
+      <div class="input-group">
+        <label for="token">Token</label>
+        <div class="input-wrapper">
+          <i class="fas fa-key icon"></i>
+          <input type="text" id="token" placeholder="Enter secure token">
+        </div>
+      </div>
 
-    <button type="button" class="add-btn" id="addChannel">
-      <i class="fas fa-plus"></i>
-    </button>
+      <div class="section-title">
+        <h3><i class="fas fa-layer-group"></i> Channels</h3>
+        <button type="button" class="btn-icon add-btn" id="addChannel" aria-label="Add Channel" title="Add Channel">
+          <i class="fas fa-plus"></i> Add
+        </button>
+      </div>
+      
+      <div id="channelsContainer"></div>
 
-    <label>Webhook URL</label>
-    <input type="text" id="webhook" placeholder="Enter webhook URL">
+      <div class="input-group mt-3">
+        <label for="webhook">Webhook URL</label>
+        <div class="input-wrapper">
+          <i class="fas fa-link icon"></i>
+          <input type="text" id="webhook" placeholder="https://...">
+        </div>
+      </div>
 
-    <div class="button-row">
-      <button type="button" onclick="generateJSON()" class="generate-btn">
-        <i class="fas fa-download"></i>
-      </button>
-      <button type="button" onclick="copyJSON()" class="copy-btn">
-        <i class="fas fa-copy"></i>
-      </button>
+      <div class="button-row">
+        <button type="button" id="generateBtn" class="btn-primary">
+          <i class="fas fa-download"></i> Generate JSON
+        </button>
+      </div>
+    </div>
+
+    <!-- Right preview container -->
+    <div class="card preview-container slide-in-right">
+      <div class="preview-header">
+        <h3><i class="fas fa-code"></i> Live Preview</h3>
+        <button type="button" id="copyBtn" class="btn-icon" aria-label="Copy to Clipboard">
+          <i class="fas fa-copy"></i> Copy
+        </button>
+      </div>
+      <div class="pre-wrapper scrollable">
+        <pre id="jsonPreview">{}</pre>
+      </div>
     </div>
   </div>
 
-  <div class="preview-container">
-    <h3>JSON Preview</h3>
-    <pre id="jsonPreview">{}</pre>
-  </div>
-
-  <!-- Replace your addChannel() with this version -->
-<script>
-  document.getElementById("addChannel").addEventListener("click", () => addChannel());
-
-  function addChannel(id = "", message = "", delay = 1) {
-    const group = document.createElement("div");
-    group.className = "channel-group";
-
-    group.innerHTML = `
-      <button type="button" class="remove-channel">
-        <i class="fas fa-times"></i>
-      </button>
-      <label>Channel ID</label>
-      <input type="text" name="channelId" value="${id}" oninput="updatePreview()" required>
-
-      <label>Message</label>
-      <textarea name="channelMessage" oninput="updatePreview()" required>${message}</textarea>
-
-      <label>Delay in Minutes</label>
-      <input type="number" name="channelDelay" value="${delay}" oninput="updatePreview()" required min="1">
-    `;
-
-    group.querySelector(".remove-channel").addEventListener("click", () => {
-      group.remove();
-      updatePreview();
-    });
-
-    document.getElementById("channelsContainer").appendChild(group);
-    updatePreview();
-  }
-
-  // Real-time binding for token & webhook
-  document.getElementById("token").addEventListener("input", updatePreview);
-  document.getElementById("webhook").addEventListener("input", updatePreview);
-
-  function updatePreview() {
-    const token = document.getElementById("token").value;
-    const webhook = document.getElementById("webhook").value;
-
-    const channels = Array.from(document.querySelectorAll(".channel-group")).map(group => ({
-      id: group.querySelector('input[name="channelId"]').value,
-      message: group.querySelector('textarea[name="channelMessage"]').value,
-      delay_in_minutes: parseInt(group.querySelector('input[name="channelDelay"]').value) || 1
-    }));
-
-    let preview = `{\n`;
-    preview += `  "token": "${token}",\n`;
-    preview += `  "channels": [\n`;
-
-    channels.forEach((channel, index) => {
-      const escapedMessage = channel.message.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-      preview += `    {\n`;
-      preview += `      "id": "${channel.id}",\n`;
-      preview += `      "message": """${escapedMessage}""",\n`;
-      preview += `      "delay_in_minutes": ${channel.delay_in_minutes}\n`;
-      preview += `    }${index < channels.length - 1 ? "," : ""}\n`;
-    });
-
-    preview += `  ],\n`;
-    preview += `  "webhook_url": "${webhook}"\n`;
-    preview += `}`;
-
-    document.getElementById("jsonPreview").textContent = preview;
-  }
-
-  function generateJSON() {
-    const content = document.getElementById("jsonPreview").textContent;
-    const blob = new Blob([content], { type: "application/json" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "config.json";
-    link.click();
-  }
-
-  function copyJSON() {
-    const json = document.getElementById("jsonPreview").textContent;
-    navigator.clipboard.writeText(json).then(() => {
-      alert("✅ JSON copied to clipboard!");
-    });
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-    addChannel(); // default channel on load
-  });
-</script>
-
-
+  <script src="script.js"></script>
 </body>
 </html>
